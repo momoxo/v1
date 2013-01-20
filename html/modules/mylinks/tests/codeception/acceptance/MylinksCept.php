@@ -4,8 +4,8 @@ $I = new WebGuy($scenario);
 
 $I->wantTo('log in as admin');
 $I->amOnPage('/');
-$I->fillField('#legacy_xoopsform_block_uname','admin');
-$I->fillField('#legacy_xoopsform_block_pass','test');
+$I->fillField('#legacy_xoopsform_block_uname', TEST_ADMIN_USERNAME);
+$I->fillField('#legacy_xoopsform_block_pass', TEST_ADMIN_PASSWORD);
 $I->click('#legacy_xoopsform_block_submit');
 $I->see('ログイン処理中です');
 
@@ -20,3 +20,4 @@ $I->amOnPage('/modules/legacy/admin/index.php?action=ModuleInstall&dirname=mylin
 $I->see('リンク集 をインストールします');
 $I->click('#contentBody form input[type=submit]');
 $I->see('リンク集 モジュールのインストールに成功しました');
+

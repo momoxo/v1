@@ -15,5 +15,5 @@ modules:
         - WebHelper
     config:
         Selenium2:
-            url: 'http://local.momoxo'
+            url: 'http://localhost/momoxo/html'
             browser: firefox
