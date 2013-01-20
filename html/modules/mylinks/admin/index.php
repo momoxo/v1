@@ -60,8 +60,6 @@ function mylinks()
     if($totalnewlinks>0){
         $totalnewlinks = "<span style='color: #ff0000; font-weight: bold'>$totalnewlinks</span>";
     }
-    echo " - <a href='".XOOPS_URL."/modules/system/admin.php?fct=preferences&amp;op=showmod&amp;mod=".$xoopsModule->getVar('mid')."'>"._MD_GENERALSET."</a>";
-    echo "<br /><br />";
     echo " - <a href=index.php?op=linksConfigMenu>"._MD_ADDMODDELETE."</a>";
     echo "<br /><br />";
     echo " - <a href=index.php?op=listNewLinks>"._MD_LINKSWAITING." ($totalnewlinks)</a>";
