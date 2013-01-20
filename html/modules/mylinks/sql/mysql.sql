@@ -18,7 +18,7 @@ CREATE TABLE mylinks_broken (
   KEY lid (lid),
   KEY sender (sender),
   KEY ip (ip)
-) TYPE=MyISAM;
+) ENGINE=InnoDB;
 # --------------------------------------------------------
 
 #
@@ -32,7 +32,7 @@ CREATE TABLE mylinks_cat (
   imgurl varchar(150) NOT NULL default '',
   PRIMARY KEY  (cid),
   KEY pid (pid)
-) TYPE=MyISAM;
+) ENGINE=InnoDB;
 # --------------------------------------------------------
 
 #
@@ -56,7 +56,7 @@ CREATE TABLE mylinks_links (
   KEY cid (cid),
   KEY status (status),
   KEY title (title(40))
-) TYPE=MyISAM;
+) ENGINE=InnoDB;
 # --------------------------------------------------------
 
 #
@@ -73,7 +73,7 @@ CREATE TABLE mylinks_mod (
   description text NOT NULL,
   modifysubmitter int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (requestid)
-) TYPE=MyISAM;
+) ENGINE=InnoDB;
 # --------------------------------------------------------
 
 #
@@ -84,7 +84,7 @@ CREATE TABLE mylinks_text (
   lid int(11) unsigned NOT NULL default '0',
   description text NOT NULL,
   KEY lid (lid)
-) TYPE=MyISAM;
+) ENGINE=InnoDB;
 # --------------------------------------------------------
 
 #
@@ -101,4 +101,4 @@ CREATE TABLE mylinks_votedata (
   PRIMARY KEY  (ratingid),
   KEY ratinguser (ratinguser),
   KEY ratinghostname (ratinghostname)
-) TYPE=MyISAM;
+) ENGINE=InnoDB;
