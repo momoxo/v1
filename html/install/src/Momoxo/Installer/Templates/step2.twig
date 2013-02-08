@@ -1,0 +1,32 @@
+{% extends layout %}
+
+{% block content %}
+  <div class="container-fluid">
+		<div class="row-fluid">
+			<h1>インストールしています</h1>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="{{ site.url }}/common/js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript">
+	$(function() {
+		$.post('{{ site.url }}/user.php', {
+			uname: '{{ site.admin.username }}',
+			pass: '{{ site.admin.password }}',
+			xoops_login: 1
+		}).success(function() {
+			$.post('{{ site.url }}/index.php', {
+				cube_module_install: 1,
+				uninstalled_modules: [
+					'legacy', 'legacyRender', 'user', 'profile', 'altsys', 'xupdate', 'stdCache'
+				],
+				option_modules: [
+					'message', 'protector', 'mylinks'
+				]
+			}).success(function() {
+				location.href = '{{ site.url }}';
+			});
+		});
+	});
+	</script>
+{% endblock %}

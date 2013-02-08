@@ -1,0 +1,133 @@
+{% extends layout %}
+
+{% block content %}
+	<div class="container-fluid">
+		<div class="hero-unit">
+			<h1>Welcome momoxo!</h1>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		{% if not testResult.requirementIsSatisfied %}
+			<div class="row-fluid">
+				{% if testResult.hasMissingPHPExtensions %}
+					<div>PHPの拡張が足りないです。</div>
+					<ul>
+						{% for extensions in testResult.getMissingPHPExtensions %}
+							<li>{{ extensions }}</li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+
+				{% if testResult.hasNotWritableFiles %}
+					<div>以下のファイルに書き込み権限を与えて下さい。</div>
+					<ul>
+						{% for file in testResult.getNotWritableFiles %}
+							<li>{{ file }}</li>
+						{% endfor %}
+					</ul>
+
+					<textarea style="width: 500px; height: 300px;">chmod 777 {{ testResult.getNotWritableFiles|join(' ') }}</textarea>
+					<hr/>
+				{% endif %}
+			</div>
+		{% else %}
+			<div class="row-fluid">
+				<div class="span8 offset2">
+					{% if form.hasError %}
+						<div class="alert alert-danger">
+							<ul>
+								{% for error in form.getErrors %}
+									<li>{{ error }}</li>
+								{% endfor %}
+							</ul>
+						</div>
+					{% endif %}
+					<form class="form-horizontal" method="post" action="{{ base }}/index.php">
+
+						<div class="control-group">
+							<label class="control-label" for="dbHost">データベースのホスト名</label>
+
+							<div class="controls">
+								<input id="dbHost" type="text" name="dbHost" value="{{ form.dbHost }}"/>
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="dbUser">データベースユーザ名</label>
+
+							<div class="controls">
+								<input id="dbUser" type="text" name="dbUser" value="{{ form.dbUser }}"/>
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="dbPassword">データベースパスワード</label>
+
+							<div class="controls">
+								<input id="dbPassword" type="text" name="dbPassword" value="{{ form.dbPassword }}"/>
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="dbName">データベース名</label>
+
+							<div class="controls">
+								<input id="dbName" type="text" name="dbName" value="{{ form.dbName }}"/>
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="dbPrefix">テーブル接頭語</label>
+
+							<div class="controls">
+								<input id="dbPrefix" type="text" name="dbPrefix" value="{{ form.dbPrefix }}"/>
+							</div>
+						</div>
+
+						<hr>
+
+						<div class="control-group">
+							<label class="control-label" for="url">momoxoのURL</label>
+
+							<div class="controls">
+								<input class="input-xxlarge" id="url" type="text" name="url" value="{{ form.url }}"/>
+							</div>
+						</div>
+
+						<hr>
+
+						<div class="control-group">
+							<label class="control-label" for="adminUsername">管理者ユーザ名</label>
+
+							<div class="controls">
+								<input id="adminUsername" type="text" name="adminUsername" value="{{ form.adminUsername }}"/>
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="adminEmail">管理者メールアドレス</label>
+
+							<div class="controls">
+								<input class="input-xxlarge" id="adminEmail" type="text" name="adminEmail" value="{{ form.adminEmail }}"/>
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="adminPassword">管理者パスワード</label>
+
+							<div class="controls">
+								<input id="adminPassword" type="password" name="adminPassword" value=""/>
+								<input id="adminPasswordVerify" type="password" name="adminPasswordVerify" value=""/>
+							</div>
+						</div>
+
+						<div class="form-actions">
+							<button type="submit" class="btn btn-primary">インストール</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}

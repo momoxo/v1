@@ -1,0 +1,26 @@
+{
+  "config": [
+    {
+      "conf_modid":     0,
+      "conf_catid":     1,
+      "conf_name":      "",
+      "conf_title":     "",
+      "conf_value":     "",
+      "conf_desc":      "",
+      "conf_formtype":  "",
+      "conf_valuetype": "",
+      "conf_order":     ""
+    },
+    {
+      "conf_modid":     0,
+      "conf_catid":     1,
+      "conf_name":      "",
+      "conf_title":     "",
+      "conf_value":     "",
+      "conf_desc":      "",
+      "conf_formtype":  "",
+      "conf_valuetype": "",
+      "conf_order":     ""
+    }
+  ]
+}

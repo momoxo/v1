@@ -1,0 +1,28 @@
+{
+	"parameters": {
+		"database.type"      : "mysql",
+		"database.structure" : "%installer_dir%/sql/mysql.structure.sql",
+		"database.data"      : "%installer_dir%/sql/mysql.data.sql",
+		"database.permanent_connection" : false,
+		"installer.template_dir" : "%installer_dir%/src/Momoxo/Installer/Templates",
+		"config_dir"         : "%xoops_root_path%/config",
+		"config_filename"    : "%xoops_root_path%/config/config.php",
+		"password_encryptor" : "Momoxo\\Installer\\Security\\MD5PasswordEncryptor"
+	},
+	"requirement": {
+		"php_extension": [
+			"gd",
+			"mbstring",
+			"mysql"
+		],
+		"writable": [
+			"%xoops_root_path%/config/",
+			"%xoops_root_path%/uploads/",
+			"%xoops_trust_path%/cache/",
+			"%xoops_trust_path%/templates_c/",
+			"%xoops_trust_path%/uploads/",
+			"%xoops_trust_path%/uploads/xupdate/",
+			"%xoops_trust_path%/modules/protector/configs/"
+		]
+	}
+}
