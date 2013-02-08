@@ -1,0 +1,591 @@
+/* リセットCSSインポート */
+@import url("reset.css");
+
+/* 汎用タグ設定 */
+html {
+    height: 100%;
+    margin-bottom: 1px;
+}
+
+body {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 85%;
+    color: #333333;
+    line-height: 1.5;
+    text-align: center;
+    background: #f5f5f5;
+}
+
+a:link {
+    color: #336699;
+}
+
+a:visited {
+    color: #6699cc;
+}
+
+a:hover {
+    color: #cc6666;
+}
+
+a:active {
+    color: #cc6666;
+}
+
+h1 {
+    margin: 0 0 10px;
+    font-size: 140%;
+}
+
+h2, h3 {
+    font-size: 120%;
+}
+
+h4, h5 {
+    font-size: 100%;
+}
+
+ul, ol {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style: none;
+}
+
+em {
+    font-style: normal;
+    font-weight: bold;
+    color: #F00;
+}
+
+table {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+td {
+    padding: 6px;
+    vertical-align: top;
+}
+
+/* レイアウト設定 */
+body.ShowBlockL0R0 #Wrapper {
+    width: 100%;
+}
+
+body.ShowBlockL1R0 #Wrapper {
+    width: 100%;
+}
+
+body.ShowBlockL0R1 #Wrapper {
+    float: left;
+    width: 100%;
+    margin-right: -220px;
+}
+
+body.ShowBlockL1R1 #Wrapper {
+    float: left;
+    width: 100%;
+    margin-right: -220px;
+}
+
+body.ShowBlockL0R0 #CenterColumn {
+    float: left;
+    width: 100%;
+}
+
+body.ShowBlockL1R0 #CenterColumn {
+    float: right;
+    width: 100%;
+    margin-left: -220px;
+}
+
+body.ShowBlockL0R1 #CenterColumn {
+    margin-right: 220px;
+}
+
+body.ShowBlockL1R1 #CenterColumn {
+    float: right;
+    width: 100%;
+    margin-left: -220px;
+}
+
+body.ShowBlockL1R0 #CenterWrapper {
+    margin-left: 220px;
+}
+
+body.ShowBlockL1R1 #CenterWrapper {
+    margin-right: 220px;
+    margin-left: 220px;
+}
+
+#container {
+    width: 980px;
+    padding: 0;
+    margin: 0 auto;
+    text-align: left;
+    background: #ffffff;
+}
+
+#CenterWrapper {
+    padding: 10px 0;
+}
+
+/* ヘッダ設定 */
+#Header {
+    height: 100px;
+    width: 100%;
+    background: #ffffff;
+}
+
+#Logo {
+    height: 100px;
+    width: 220px;
+    display:block;
+}
+
+#Header a:link,
+#Header a:visited {
+    text-decoration: none;
+}
+
+#siteTitle {
+	margin-top: 10px;
+	padding: 0;
+	line-height: 30px;
+}
+
+
+/* パンくず設定 */
+#breadcrumb,
+#theme_breadcrumbs {
+    width: 100%;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #1d1d1d;
+}
+
+/* コンテンツ設定 */
+#CenterColumn .BlockTitle {
+    border-bottom: #cccccc solid 2px;
+}
+
+#CenterColumn .BlockTitleSp {
+    border-bottom: #cccccc solid 2px;
+}
+
+#CenterColumn .BlockContent,
+#ModuleContents {
+    clear: both;
+    padding: 5px 10px 5px 5px;
+    font-size: 100%;
+    line-height: 1.5;
+}
+
+/* 中央左右カラム */
+#CenterLColumn {
+    float: left;
+    width: 49%;
+}
+
+#CenterRColumn {
+    float: right;
+    width: 49%;
+}
+
+.CenterCblock,
+.CenterLblock,
+.CenterRblock {
+    clear: both;
+    margin-bottom: 20px;
+}
+
+/* 左カラム */
+#LeftColumn {
+    float: left;
+    width: 200px;
+    overflow: hidden;
+}
+
+.LeftBlock {
+    padding: 10px 0;
+}
+
+#LeftColumn .BlockTitle {
+    padding: 0 10px;
+    margin: 0 0 5px 0;
+    color: #ffffff;
+    line-height: 1.5;
+    background-color: #C5C5C5;
+}
+
+#LeftColumn .BlockContent {
+    padding: 0 10px;
+    text-align: left;
+}
+
+
+/* 右カラム */
+#RightColumn {
+    float: right;
+    width: 200px;
+}
+
+.RightBlock {
+    padding: 10px 0;
+}
+
+#RightColumn .BlockTitle {
+    padding: 0 10px;
+    margin: 0 0 5px 0;
+    color: #ffffff;
+    line-height: 1.5;
+    background-color: #C5C5C5;
+}
+
+#RightColumn .BlockContent {
+    padding: 0 10px;
+    text-align: left;
+}
+
+/* フッタ設定 */
+#Footer {
+    clear: both;
+    width: 100%;
+    margin: 0 auto;
+    border-top: #f2f2f2 dotted 1px;
+    border-bottom: #8f8f8f solid 1px;
+    background-color: #e9e9e9;
+}
+
+#Footer p {
+    padding: 10px 0;
+    margin: 0 10px;
+    text-align: center;
+}
+
+#BacktoTop {
+    clear: both;
+    margin: 10px;
+    font-size: 80%;
+    text-align: right;
+}
+
+#Banner {
+    clear: both;
+    width: 100%;
+    padding: 20px 0;
+    margin: 0 auto;
+}
+
+/* for accessibility */
+.Skip {
+    position: absolute;
+    left: -999em;
+}
+
+/******************************************************************************/
+
+/* clearfix http://www.positioniseverything.net/ */
+.clearfix:after {
+    clear: both;
+    height: 0;
+    visibility: hidden;
+    display: block;
+    content: ".";
+}
+
+.clearfix {
+    display: inline-table;
+}
+
+/* Hides from IE-mac \*/
+* html .clearfix {
+    height: 1%;
+}
+
+.clearfix {
+    display: block;
+}
+
+/* End hide from IE-mac */
+
+/******************************************************************************/
+/* メインメニュー及びユーザメニュー */
+.mainmenu, #usermenu {
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+
+.mainmenu li, #usermenu li {
+    display: inline;
+}
+
+.mainmenu a {
+    margin: 0 1px;
+    border-bottom: #dddddd solid 1px;
+    display: block;
+}
+
+.mainmenu a:hover {background-color:#eeeeee}
+
+.mainmenu a.menuTop {
+    padding: 5px 10px;
+}
+
+.mainmenu a.menuMain {
+    padding: 5px 10px;
+}
+
+.mainmenu a.menuSub {
+    padding: 5px 5px 5px 15px;
+}
+
+#usermenu a {
+    padding: 5px 10px;
+    margin: 0 1px;
+    border-bottom: #dddddd solid 1px;
+    display: block;
+}
+
+#usermenu a:hover {background-color:#eeeeee}
+
+#usermenu a.menuTop {}
+#usermenu a.highlight {
+    background-color: #ffcccc;
+}
+
+/******************************************************************************/
+.outer {}
+.head {
+    padding: 5px;
+    font-weight: bold;
+    background-color: #cccccc;
+}
+
+.even {
+    padding: 5px;
+    background-color: #eeeeee;
+}
+
+.odd  {
+    padding: 5px;
+    background-color: #fafafa;
+}
+
+
+.foot {
+    padding: 5px;
+}
+
+th {
+    padding: 5px;
+    color: #ffffff;
+    background-color: #666666;
+}
+
+tr.even td {
+    padding: 5px;
+    background-color: #eeeeee;
+}
+
+tr.odd td {
+    padding: 5px;
+    background-color: #fafafa;
+}
+
+.item {}
+.itemHead {
+    padding: 3px 8px;
+    color: #ffffff;
+    background: #666666;
+}
+
+.itemInfo {
+    padding: 3px;
+    text-align: right;
+    background: #efefef;
+}
+
+.itemTitle a {
+    font-variant: small-caps;
+    font-weight: bold;
+    color: #ffffff;
+    background: transparent;
+}
+
+.itemPoster {
+    font-size: 90%;
+}
+
+.itemPostDate {
+    font-size: 90%;
+}
+
+.itemStats {
+    font-size: 90%;
+}
+
+.itemBody {
+    padding: 5px 10px;
+}
+
+.itemText {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    line-height: 1.5;
+}
+
+.itemText:first-letter {}
+.itemFoot {
+    padding: 3px;
+    text-align: right;
+    background: #efefef;
+}
+
+.itemAdminLink {
+    font-size: 90%;
+}
+
+.itemPermaLink {
+    font-size: 90%;
+}
+
+div.errorMsg {
+    padding: 10px;
+    border-top: 1px solid #ddffff;
+    border-right: 1px solid #aaaaaa;
+    border-bottom: 1px solid #aaaaaa;
+    border-left: 1px solid #ddffff;
+    font-weight: bold;
+    text-align: center;
+    background: #ffcccc;
+}
+
+div.confirmMsg {
+    padding: 10px;
+    border-top: 1px solid #ddffff;
+    border-right: 1px solid #aaaaaa;
+    border-bottom: 1px solid #aaaaaa;
+    border-left: 1px solid #ddffff;
+    font-weight: bold;
+    color: #136C99;
+    text-align: center;
+    background: #ddffdf;
+}
+
+div.resultMsg {
+    padding: 10px;
+    border-top: 1px solid silver;
+    border-right: 1px solid #666666;
+    border-bottom: 1px solid #666666;
+    border-left: 1px solid silver;
+    font-weight: bold;
+    color: #333333;
+    text-align: center;
+    background: #cccccc;
+}
+
+div.xoopsCode {
+    padding: 0px 6px 6px 6px;
+    border: 1px inset #000080;
+    font-family: "Courier New",Courier,monospace;
+    background: #fafafa;
+}
+
+div.xoopsQuote {
+    padding: 3px;
+    border: 1px solid #336699;
+    background: #fafafa;
+}
+
+.comTitle {
+    margin-bottom: 2px;
+    font-weight: bold;
+}
+
+.comText {
+    padding: 2px;
+}
+
+.comUserStat {
+    padding: 2px;
+    margin: 2px;
+    border: 1px solid silver;
+    font-size: 10px;
+    font-weight: bold;
+    color: #2F5376;
+    background-color: #ffffff;
+}
+
+.comUserStatCaption {
+    font-weight: normal;
+}
+
+.comUserStatus {
+    margin-top: 10px;
+    margin-left: 2px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #2F5376;
+}
+
+.comUserRank {
+    margin: 2px;
+}
+
+.comUserRankText {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.comUserRankImg {
+    border: 0;
+}
+
+.comUserName {}
+.comUserImg {
+    margin: 2px;
+}
+
+.comDate {
+    font-size: smaller;
+    font-style: italic;
+    font-weight: normal;
+}
+
+.comDateCaption {
+    font-style: normal;
+    font-weight: bold;
+}
+
+#navigation {
+	background: #e9e9e9;
+	padding: 0;
+	margin: 10px 0;
+}
+
+#navigation a	{
+	color: #0e0e0e;
+	display: block;
+	float: left;
+	padding: 10px;
+	text-decoration: none
+}
+
+#navigation a:visited {
+	color: #0e0e0e;
+}
+
+#navigation a:hover	{
+	text-decoration: none;
+	background: #5a87f2;
+}
+
+#navigation a:active {
+	position: relative;
+	top: 0;
+}
