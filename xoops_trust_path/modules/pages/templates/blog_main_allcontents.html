@@ -1,0 +1,78 @@
+<!-- todo pagenavi -->
+<div class="blog_title_img">
+<img src="<{$xoops_imageurl}>images/blog_title.gif">
+</div>
+<{foreach item="content" from=$contents}>
+
+	<{* admin controllers *}>
+	<{capture name="controllers"}>
+		<{if $content.can_edit}>
+			<a href="<{$mod_url}>/index.php?page=contentmanager&amp;content_id=<{$content.id}>">[<{$smarty.const._MD_PAGES_LINK_EDITCONTENT}>]</a>
+		<{/if}>
+
+		<{if $xoops_isadmin}>
+			<a href="<{$mod_url}>/admin/index.php?page=contents&amp;cat_id=<{$category.id}>">[<{$smarty.const._MD_PAGES_LINK_BATCHCONTENTS}>]</a>
+		<{/if}>
+	<{/capture}>
+
+	<{if trim($smarty.capture.controllers)}>
+		<!-- controllers -->
+		<div class="pages_controllers">
+			<{$smarty.capture.controllers}>
+		</div>
+	<{/if}>
+	<{include file="db:_blog_detail.html"}>
+<{/foreach}>
+
+<!-- jump to top -->
+<!--div class="bottom_of_content_body"><a href="#top_of_pages_body"><{$smarty.const._MD_PAGES_JUMPTOTOPOFPAGESBODY}></a></div-->
+
+<{if $category.isadminormod}>
+	<!-- informations for admin -->
+	<{$smarty.const._MD_PAGES_CREATED}>:<{$content.created_time_formatted}> <{$content.poster_uname}> 
+	<{if $content.modified_time > $content.created_time}>
+		&nbsp;
+		<{$smarty.const._MD_PAGES_MODIFIED}>:<{$content.modified_time_formatted}> <{$content.modifier_uname}> 
+	<{/if}>
+	&nbsp;
+	<{$smarty.const._MD_PAGES_VIEWED}>:<{$content.viewed}>
+	<br />
+<{/if}>
+
+<{if trim($smarty.capture.controllers)}>
+	<!-- controllers -->
+	<div class="pages_controllers">
+		<{$smarty.capture.controllers}>
+	</div>
+<{/if}>
+
+<!-- page navigation -->
+<{if $mod_config.show_pagenavi && $content.id}>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" class="pages_pagenavigation">
+<tr>
+	<td width="33%" align="<{$smarty.const._ALIGN_START}>" valign="top">
+	<{if $prev_content.id}>
+		<a href="<{$mod_url}>/<{$prev_content.link}>" accesskey="F"><img src="<{$mod_imageurl}>/navicon_<{if $smarty.const._ALIGN_START=='left'}>prev<{else}>next<{/if}>.gif" alt="<{$smarty.const._MD_PAGES_PREV}>" /></a><br />
+		<{$prev_content.subject}>
+	<{/if}>
+	</td>
+	<td width="34%" align="center" valign="top">
+		<a href="<{$mod_url}>/<{$category.link}>" accesskey="P"><img src="<{$mod_imageurl}>/navicon_up.gif" alt="<{$smarty.const._MD_PAGES_CATEGORYINDEX}>" /></a><br />
+		<{$category.title}>
+	</td>
+	<td width="33%" align="<{$smarty.const._ALIGN_END}>" valign="top">
+	<{if $next_content.id}>
+		<a href="<{$mod_url}>/<{$next_content.link}>" accesskey="F"><img src="<{$mod_imageurl}>/navicon_<{if $smarty.const._ALIGN_START=='left'}>next<{else}>prev<{/if}>.gif" alt="<{$smarty.const._MD_PAGES_NEXT}>" /></a><br />
+		<{$next_content.subject}>
+	<{/if}>
+	</td>
+</tr>
+</table>
+<{/if}>
+
+<div class="blog_footer_gotop">
+&nbsp;<span class="black_square_11"><img src="<{$xoops_imageurl}>images/black_square_11_11.gif"></span>一覧に戻る
+</div>
+
+<{include file='db:system_notification_select.html'}>
+</div>

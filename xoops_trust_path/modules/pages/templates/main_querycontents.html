@@ -1,0 +1,34 @@
+<div class="pages_container" id="<{$mydirname}>_container">
+
+<{include file="db:`$mydirname`_inc_breadcrumbs.html"}>
+
+<!-- controllers -->
+<div class="pages_controllers">
+
+	<!-- link to menu -->
+	<a href="<{$mod_url}>/index.php?page=menu">[<{$smarty.const._MD_PAGES_MENU}>]</a>
+</div>
+
+<h1><{$query.title}></h1>
+
+<p><{$query.desc}></p>
+
+<!-- list contents -->
+<{if $contents}>
+<ul class="pages_list_contents">
+<{foreach from=$contents item="content"}>
+	<li>
+		<a href="<{$mod_url}>/<{$content.link}>"><{$content.subject}></a>
+		<{* <{$content.body}> *}>
+	</li>
+<{/foreach}>
+</ul>
+<{else}>
+	<{$smarty.const._MD_PAGES_ERR_NOCONTENTMATCHED}>
+<{/if}>
+
+<hr class="notification" />
+<{include file='db:system_notification_select.html'}>
+
+</div>
+<!-- end module contents -->

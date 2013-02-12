@@ -1,0 +1,65 @@
+div.pages_breadcrumbs{
+	font-size				:95%;
+	padding				:0 0 3px;
+}
+
+.pages_body{
+	margin				:0 -2px;
+	padding				:15px 8px;}
+
+div.pages_menu h1 { margin: 18px 0 0 0; padding: 3px; background-color:#eee;}
+div.pages_menu h2 { margin: 18px 0 0 10px; padding: 3px; background-color:#eee; }
+div.pages_menu h3 { margin: 18px 0 0 20px; padding: 3px; background-color:#eee; }
+div.pages_menu h4 { margin: 18px 0 0 30px; padding: 3px; background-color:#eee; }
+div.pages_menu h5 { margin: 18px 0 0 40px; padding: 3px; background-color:#eee; }
+div.pages_menu div.level1 { margin-left: 0; }
+div.pages_menu div.level2 { margin-left: 10px; }
+div.pages_menu div.level3 { margin-left: 20px; }
+div.pages_menu div.level4 { margin-left: 30px; }
+div.pages_menu div.level5 { margin-left: 40px; }
+
+em.pages_notice { font-weight: bold; font-style: normal; color: #FF0000; }
+
+
+div.pages_controllers_in_menu { float: <{$smarty.const._ALIGN_END}>; position: relative; top : -1.5em;}
+
+div.bottom_of_content_body { clear: <{$smarty.const._ALIGN_END}>; }
+
+ul.pages_list_contents li { list-style: none outside; }
+ul.pages_list_contents_in_menu li { list-style: none outside; }
+
+div.pages_print_icon { float: <{$smarty.const._ALIGN_END}>; width: 40px; height: 40px; }
+div.pages_tellafriend_icon { float: <{$smarty.const._ALIGN_END}>; width: 40px; height: 40px; }
+div.pages_vote form { display: inline; }
+
+table.pages_pagenavigation { border-top: 1px #aaa solid; margin-top: 20px;}
+
+
+//table.pages_form_table th.pages_waiting { color: red; }
+//table.pages_form_table td.pages_waiting { color: red; background-color: white ; }
+
+table.pages_form_table th.pages_waiting { background-color: white ;}
+table.pages_form_table td.pages_waiting { background-color: white ; }
+
+
+table.pages_form_table td,
+table.pages_form_table th{
+        color: black;
+        vertical-align          :top !important;
+        text-align                      :<{$smarty.const._ALIGN_START}>;}
+p.pages_submit{
+        text-align                      :center;
+        margin                          :0;
+        padding                         :10px;}
+
+input.pages_ascii_only { ime-mode: disabled; }
+input.pages_number_only { ime-mode: disabled; text-align: <{$smarty.const._ALIGN_END}>; }
+
+pre.pages_history_diff del { color: red; }
+pre.pages_history_diff ins { color: blue; }
+
+div.pages_pagebreak { margin: 10px; }
+div.pages_pagebreak span {border: 1px solid black; padding: 2px; margin: 2px; }
+div.pages_pagebreak span.selected {border: 0px; }
+
+

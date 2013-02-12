@@ -1,0 +1,45 @@
+<{php}>
+global $xoopsTpl;
+$mydirname = $xoopsTpl->get_template_vars('mydirname');
+$top_relative = 0;
+$agent = $_SERVER["HTTP_USER_AGENT"];
+if(mb_ereg("MSIE 6.", $agent)){
+  // IEの時の処理
+     $top_relative = -51;
+}
+$xoopsTpl->assign('top_relative',$top_relative);
+if ($mydirname == 'news'){
+    // お知らせ・イベントのとき、過去の一覧ページだったとき
+    if(isset($_GET['page'])){
+        if(($_GET['page'] == 'archive') or ($_GET['page'] == 'from_archive')){
+            $mod_url = $xoopsTpl->get_template_vars('mod_url');
+            $xoops_url = $xoopsTpl->get_template_vars('xoops_url');
+            $xoops_modulename = $xoopsTpl->get_template_vars('xoops_modulename');
+            $archiveLink = '&nbsp;&gt;&nbsp;<a href="'.$mod_url.'/index.php?page=archive">'.$xoops_modulename.'(月別)</a>';
+            $xoopsTpl->assign('archiveLink',$archiveLink);
+        }
+    }
+}
+$xoopsTpl->assign('mydirname',$mydirname);
+
+<{/php}>
+<{if $mod_config.show_breadcrumbs}>
+<!-- breadcrumbs -->
+<div class="pages_breadcrumbs" style="position:relative;top:<{$top_relative}>px;">
+    <a href="<{$xoops_url}>">TOP</a>
+    <{if $mydirname != "contents" && $mydirname != "movie"}>
+    &nbsp;&gt;&nbsp;<a href="<{$mod_url}>/index.php"><{$xoops_modulename}><{$archiveLink}></a>
+    <{/if}>
+	<{foreach from=$xoops_breadcrumbs key="i" item="bc" name="breadcrumbs_list"}>
+		<{if $i > 0}>
+			&nbsp;&gt;&nbsp;
+			<{if $bc.url}>
+				<a href="<{$bc.url}>"><{$bc.name}></a>
+			<{else}>
+				<{$bc.name}>
+			<{/if}>
+		<{/if}>
+	<{/foreach}>
+</div>
+
+<{/if}>
