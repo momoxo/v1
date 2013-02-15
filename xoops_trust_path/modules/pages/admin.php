@@ -31,14 +31,14 @@ if( ! empty( $_GET['lib'] ) ) {
 
 	// check the page can be accessed (make controllers.php just under the lib)
 	$controllers = array() ;
-	if( file_exists( XOOPS_TRUST_PATH.'/modules/'.$lib.'/controllers.php' ) ) {
-		require XOOPS_TRUST_PATH.'/modules/'.$lib.'/controllers.php' ;
+	if( file_exists( XOOPS_TRUST_PATH.'/libs/'.$lib.'/controllers.php' ) ) {
+		require XOOPS_TRUST_PATH.'/libs/'.$lib.'/controllers.php' ;
 		if( ! in_array( $page , $controllers ) ) $page = $controllers[0] ;
 	}
-	if( file_exists( XOOPS_TRUST_PATH.'/modules/'.$lib.'/'.$page.'.php' ) ) {
-		include XOOPS_TRUST_PATH.'/modules/'.$lib.'/'.$page.'.php' ;
-	} else if( file_exists( XOOPS_TRUST_PATH.'/modules/'.$lib.'/index.php' ) ) {
-		include XOOPS_TRUST_PATH.'/modules/'.$lib.'/index.php' ;
+	if( file_exists( XOOPS_TRUST_PATH.'/libs/'.$lib.'/'.$page.'.php' ) ) {
+		include XOOPS_TRUST_PATH.'/libs/'.$lib.'/'.$page.'.php' ;
+	} else if( file_exists( XOOPS_TRUST_PATH.'/libs/'.$lib.'/index.php' ) ) {
+		include XOOPS_TRUST_PATH.'/libs/'.$lib.'/index.php' ;
 	} else {
 		die( 'wrong request' ) ;
 	}
