@@ -127,15 +127,32 @@
 		<{/if}>
 
 		<!-- body -->
+		<{if $smarty.const.LEGACY_BASE_VERSION|version_compare:'2.2':'>=' }>
+			<{assign var=xcl22 value=1}>
+		<{/if}>
 		<tr valign="top" align="<{$smarty.const._ALIGN_START}>">
-			<th class="head"><label for="body"><{$smarty.const._MD_PAGES_TH_BODY}></label><{if $mod_config.body_editor != "common_fckeditor"}><input type="submit" class="formButton" name="contentman_preview"  id="contentman_swith_to_fckeditor" value="fckeditor" onclick="xoopsGetElementById('body_editor').value='common_fckeditor'" /><{/if}></th>
+			<th class="head"><label for="body"><{$smarty.const._MD_PAGES_TH_BODY}></label><{if $mod_config.body_editor != "common_fckeditor" && !$xcl22}><input type="submit" class="formButton" name="contentman_preview"  id="contentman_swith_to_fckeditor" value="fckeditor" onclick="xoopsGetElementById('body_editor').value='common_fckeditor'" /><{/if}></th>
 			<td class="even">
 				<{if $body_wysiwyg && ! $content.filter_infos.eval.enabled}>
 					<{$body_wysiwyg}>
 				<{else}>
-					<input type="checkbox" id="body_bbcode_onoff" onclick="if(this.checked){xoopsGetElementById('body_bbcode_buttons_pre').style.display='block';xoopsGetElementById('body_bbcode_buttons_post').style.display='block'}else{xoopsGetElementById('body_bbcode_buttons_pre').style.display='none';xoopsGetElementById('body_bbcode_buttons_post').style.display='none'};" /><label for="body_bbcode_onoff"><{$smarty.const._MD_PAGES_LABEL_INPUTHELPER}></label>
-					<br />
-					<{xoopsdhtmltarea name="body" cols="60" rows="15" value=$content.body pre_style="display:none;" post_style="display:none;"}>
+					<{if $xcl22 }>
+						<{if $content.filter_infos.eval.enabled}>
+							<{assign var=editor value=none}>
+						<{elseif !$content.subject || !$content.filter_infos.xcode.enabled}>
+						    <{assign var=editor value=html}>
+						<{else}>
+						    <{assign var=editor value=bbcode}>
+						<{/if}>
+						<{xoops_dhtmltarea class=$editor name=body cols=60 rows=15 value=$content.body|htmlspecialchars_decode:$smarty.const.ENT_QUOTES editor=$editor}>
+						<{if $legacy_module == 'legacy'}>
+							<{assign var=editor value=bbcode}>
+						<{/if}>
+					<{else}>
+						<input type="checkbox" id="body_bbcode_onoff" onclick="if(this.checked){xoopsGetElementById('body_bbcode_buttons_pre').style.display='block';xoopsGetElementById('body_bbcode_buttons_post').style.display='block'}else{xoopsGetElementById('body_bbcode_buttons_pre').style.display='none';xoopsGetElementById('body_bbcode_buttons_post').style.display='none'};" /><label for="body_bbcode_onoff"><{$smarty.const._MD_PICO_LABEL_INPUTHELPER}></label>
+						<br />
+						<{xoopsdhtmltarea name="body" cols="60" rows="15" value=$content.body pre_style="display:none;" post_style="display:none;"}>
+					<{/if}>
 				<{/if}>
 			</td>
 		</tr>
@@ -154,7 +171,12 @@
 			<td class="even">
 				<ul>
 				<{foreach from=$content.filter_infos key="filter_name" item="filter"}>
-					<li title="<{$filter.desc}>"><input type="checkbox" name="filter_enabled_<{$filter_name}>" id="filter_enabled_<{$filter_name}>" value="1" <{if $filter.enabled}>checked="checked"<{/if}> <{if $filter.fixed}>disabled="disabled"<{/if}> /><input type="text" name="filter_weight_<{$filter_name}>" id="filter_weight_<{$filter_name}>" value="<{$filter.weight}>" size="3" class="pages_number_only"  /> <{$filter.title}></li>
+					<{if $editor == "html" && !$content.body && ($filter_name == "xcode" || $filter_name == "nl2br")}>
+						<{assign var=check value=0}>
+					<{else}>
+						<{assign var=check value=1}>
+					<{/if}>
+					<li title="<{$filter.desc}>"><input type="checkbox" name="filter_enabled_<{$filter_name}>" id="filter_enabled_<{$filter_name}>" value="1" <{if $filter.enabled && $check}>checked="checked"<{/if}> <{if $filter.fixed}>disabled="disabled"<{/if}> /><input type="text" name="filter_weight_<{$filter_name}>" id="filter_weight_<{$filter_name}>" value="<{$filter.weight}>" size="3" class="pico_number_only"  /> <{$filter.title}></li>
 				<{/foreach}>
 				</ul>
 			</td>
