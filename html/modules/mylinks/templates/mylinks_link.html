@@ -8,7 +8,7 @@
   </tr>
   <tr>
     <td class="odd" colspan='2' align='left'><{$link.adminlink}><b><{$lang_description}></b><br />
-<{if $link.logourl != ""}>
+<{if trim($link.logourl) != ""}>
    <a href="<{$xoops_url}>/modules/mylinks/visit.php?cid=<{$link.cid}>&amp;lid=<{$link.id}>" target="_blank"><img src="<{$xoops_url}>/modules/mylinks/images/shots/<{$link.logourl}>" width="<{$shotwidth}>" alt=""  align="right" vspace="3" hspace="7"/></a>
 <{/if}>
     <div style="text-align: justify"><{$link.description}></div><br /></td>
