@@ -872,9 +872,10 @@ function approve()
     global $xoopsConfig, $xoopsDB, $myts, $eh;
     $lid = $_POST['lid'];
     $title = $_POST['title'];
-    $cid = $_POST['cid'];
-    if ( empty($cid) ) {
-        $cid = 0;
+    if(isset($_POST['cid'])){
+	    $cid = $_POST['cid'];
+	} else {
+	    $cid = 0;
     }
     $description = $_POST['description'];
     if (($_POST["url"]) || ($_POST["url"]!="")) {
