@@ -178,6 +178,7 @@ body.ShowBlockL1R1 #CenterWrapper {
 	display: inline;
   color: #ffffff;
 	background: #3580cc;
+	font-weight: normal;
 	margin: 10px;
 	padding-left: 10px;
   border-radius: 10px;
@@ -187,6 +188,11 @@ body.ShowBlockL1R1 #CenterWrapper {
 #sitename a:visited {
   text-decoration: none;
   color: #ffffff;
+}
+
+#sitename a:hover {
+  text-decoration: none;
+  color: #aacaea;
 }
 
 #slogan {
