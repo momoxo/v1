@@ -1,40 +1,42 @@
-/* リセットCSSインポート */
+/* Import Reset CSS */
 @import url("reset.css");
 
-/* 汎用タグ設定 */
+/* Import Bootstrap CSS */
+@import url("bootstrap/css/bootstrap.min.css");
+
+/* General Tag Settings */
 html {
-    height: 100%;
-    margin-bottom: 1px;
+  height: 100%;
+  margin-bottom: 1px;
 }
 
 body {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
-    font-size: 85%;
-    color: #333333;
-    line-height: 1.5;
-    text-align: center;
-    background: #f5f5f5;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 85%;
+  color: #333333;
+  line-height: 1.5;
+  background: #f5f5f5;
 }
 
 a:link {
-    color: #336699;
+  color: #336699;
 }
 
 a:visited {
-    color: #6699cc;
+  color: #6699cc;
 }
 
 a:hover {
-    color: #cc6666;
+  color: #cc6666;
 }
 
 a:active {
-    color: #cc6666;
+  color: #cc6666;
 }
 
 h1 {
-    margin: 0 0 10px;
-    font-size: 140%;
+  margin: 0 0 10px;
+  font-size: 140%;
 }
 
 h2, h3 {
@@ -42,278 +44,336 @@ h2, h3 {
 }
 
 h4, h5 {
-    font-size: 100%;
+  font-size: 100%;
 }
 
 ul, ol {
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
 li {
-    list-style: none;
+  list-style: none;
 }
 
 em {
-    font-style: normal;
-    font-weight: bold;
-    color: #F00;
+  font-style: normal;
+  font-weight: bold;
 }
 
 table {
-    width: 100%;
-    padding: 0;
-    margin: 0;
+  width: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 td {
-    padding: 6px;
-    vertical-align: top;
+  padding: 6px;
+  vertical-align: top;
 }
 
-/* レイアウト設定 */
+/* Layout Settings */
+/* 1 Column Layout */
 body.ShowBlockL0R0 #Wrapper {
-    width: 100%;
-}
-
-body.ShowBlockL1R0 #Wrapper {
-    width: 100%;
-}
-
-body.ShowBlockL0R1 #Wrapper {
-    float: left;
-    width: 100%;
-    margin-right: -220px;
-}
-
-body.ShowBlockL1R1 #Wrapper {
-    float: left;
-    width: 100%;
-    margin-right: -220px;
+  width: 100%;
 }
 
 body.ShowBlockL0R0 #CenterColumn {
-    float: left;
-    width: 100%;
+  float: left;
+  width: 100%;
+}
+
+/* 2 Column Layout. Enable Left Column */
+body.ShowBlockL1R0 #Wrapper {
+  width: 100%;
 }
 
 body.ShowBlockL1R0 #CenterColumn {
-    float: right;
-    width: 100%;
-    margin-left: -220px;
-}
-
-body.ShowBlockL0R1 #CenterColumn {
-    margin-right: 220px;
-}
-
-body.ShowBlockL1R1 #CenterColumn {
-    float: right;
-    width: 100%;
-    margin-left: -220px;
+  float: right;
+  width: 100%;
+  margin-left: -240px;
 }
 
 body.ShowBlockL1R0 #CenterWrapper {
-    margin-left: 220px;
+  margin-left: 240px;
+}
+
+body.ShowBlockL1R0 #CenterCColumn {
+	margin-right: 20px;
+}
+
+body.ShowBlockL1R0 #CenterLColumn {
+	margin-left: -20px;
+}
+
+body.ShowBlockL1R0 #CenterLColumn {
+	margin-right: 10px;
+}
+
+/* 2 Column Layout. Enable Right Column */
+body.ShowBlockL0R1 #Wrapper {
+  float: left;
+  width: 100%;
+  margin-right: -240px;
+}
+
+body.ShowBlockL0R1 #CenterColumn {
+  margin-right: 240px;
+  margin-left: 10px;
+}
+
+body.ShowBlockL0R1 #CenterLColumn {
+	margin-left: -20px;
+}
+
+body.ShowBlockL0R1 #CenterLColumn {
+	margin-right: 10px;
+}
+
+/* 3 Column Layout. Enable Left and Right Column */
+body.ShowBlockL1R1 #Wrapper {
+  float: left;
+  width: 100%;
+  margin-right: -160px;
+}
+
+body.ShowBlockL1R1 #CenterColumn {
+  float: right;
+  width: 100%;
+  margin-left: -160px;
 }
 
 body.ShowBlockL1R1 #CenterWrapper {
-    margin-right: 220px;
-    margin-left: 220px;
+  margin-right: 160px;
+  margin-left: 160px;
 }
 
-#container {
-    width: 980px;
-    padding: 0;
-    margin: 0 auto;
-    text-align: left;
-    background: #ffffff;
+/* Page Settings */
+#mainpage {
+  background: #ffffff;
+  border-left: 1px solid #d0d0d0;
+  border-right: 1px solid #d0d0d0;
+  border-bottom: 1px solid #d0d0d0;
 }
 
-#CenterWrapper {
-    padding: 10px 0;
+/* Header Settings */
+#header {
+  background: #ffffff;
+  border-left: 1px solid #d0d0d0;
+  border-right: 1px solid #d0d0d0;
+  padding-top: 10px;
+  border-bottom: dotted 1px #dcdcdc;
 }
 
-/* ヘッダ設定 */
-#Header {
-    height: 100px;
-    width: 100%;
-    background: #ffffff;
+#sitename {
+  float: left;
+	font-size: 2em;
 }
 
-#Logo {
-    height: 100px;
-    width: 220px;
-    display:block;
+#sitename span {
+  padding-right: 5px;
 }
 
-#Header a:link,
-#Header a:visited {
-    text-decoration: none;
+#sitename h1 {
+	display: inline;
+  color: #ffffff;
+	background: #3580cc;
+	margin: 10px;
+	padding-left: 10px;
+  border-radius: 10px;
 }
 
-#siteTitle {
-	margin-top: 10px;
-	padding: 0;
-	line-height: 30px;
+#sitename a:link,
+#sitename a:visited {
+  text-decoration: none;
+  color: #ffffff;
 }
 
+#slogan {
+  float: left;
+	font-size: 1.5em;
+	margin: 10px;
+}
 
-/* パンくず設定 */
+@font-face {
+  font-family: 'font1';
+  src: url('modin.ttf');
+}
+
+.fontArbasis {
+	font-family:'font1';
+}
+
+/* Navigation Settings */
+#navigation {
+	background: #ffffff;
+	border-left: 1px solid #d0d0d0;
+  border-right: 1px solid #d0d0d0;
+}
+
+#navigation a	{
+  background: #e4e4e4;
+	color: #0e0e0e;
+	display: block;
+	float: left;
+	padding: 5px;
+	text-decoration: none
+}
+
+#navigation a:hover	{
+	text-decoration: none;
+	color: #ffffff;
+	background: #3580cc;
+}
+
+#navigation a:active {
+	position: relative;
+	top: 0;
+}
+
+/* Breadcrumb Settings */
 #breadcrumb,
 #theme_breadcrumbs {
-    width: 100%;
-    margin-bottom: 5px;
-    border-bottom: 1px solid #1d1d1d;
+  width: 100%;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #1d1d1d;
 }
 
-/* コンテンツ設定 */
+/* Contents Settings */
 #CenterColumn .BlockTitle {
-    border-bottom: #cccccc solid 2px;
-}
-
-#CenterColumn .BlockTitleSp {
-    border-bottom: #cccccc solid 2px;
+  border-bottom: #cccccc solid 2px;
 }
 
 #CenterColumn .BlockContent,
 #ModuleContents {
-    clear: both;
-    padding: 5px 10px 5px 5px;
-    font-size: 100%;
-    line-height: 1.5;
+  clear: both;
+  padding: 5px 10px 5px 5px;
+  font-size: 100%;
+  line-height: 1.5;
 }
 
-/* 中央左右カラム */
+/* Center Left&Right Settings */
 #CenterLColumn {
-    float: left;
-    width: 49%;
+  float: left;
 }
 
 #CenterRColumn {
-    float: right;
-    width: 49%;
+  float: right;
 }
 
 .CenterCblock,
 .CenterLblock,
 .CenterRblock {
-    clear: both;
-    margin-bottom: 20px;
+  clear: both;
+  margin-bottom: 20px;
 }
 
-/* 左カラム */
+/* Left Column Settings */
 #LeftColumn {
-    float: left;
-    width: 200px;
-    overflow: hidden;
+  float: left;
 }
 
 .LeftBlock {
-    padding: 10px 0;
+  padding: 10px 0;
+  border-right: dotted 1px #dcdcdc;
 }
 
 #LeftColumn .BlockTitle {
-    padding: 0 10px;
-    margin: 0 0 5px 0;
-    color: #ffffff;
-    line-height: 1.5;
-    background-color: #C5C5C5;
+  padding: 0 10px;
+  margin: 0 0 5px 0;
+  line-height: 1.5;
 }
 
 #LeftColumn .BlockContent {
-    padding: 0 10px;
-    text-align: left;
+  padding: 0 10px;
+  text-align: left;
 }
 
 
-/* 右カラム */
+/* Right Column Settings */
 #RightColumn {
-    float: right;
-    width: 200px;
+  float: right;
 }
 
 .RightBlock {
-    padding: 10px 0;
+  padding: 10px 0;
+  border-left: dotted 1px #d3d3d3;
 }
 
 #RightColumn .BlockTitle {
-    padding: 0 10px;
-    margin: 0 0 5px 0;
-    color: #ffffff;
-    line-height: 1.5;
-    background-color: #C5C5C5;
+  padding: 0 10px;
+  margin: 0 0 5px 0;
+  line-height: 1.5;
 }
 
 #RightColumn .BlockContent {
-    padding: 0 10px;
-    text-align: left;
+  padding: 0 10px;
+  text-align: left;
 }
 
-/* フッタ設定 */
-#Footer {
-    clear: both;
-    width: 100%;
-    margin: 0 auto;
-    border-top: #f2f2f2 dotted 1px;
-    border-bottom: #8f8f8f solid 1px;
-    background-color: #e9e9e9;
+/* Top Bar Settings */
+#topbar {
+  background-color: #3b3b3b;
 }
 
-#Footer p {
-    padding: 10px 0;
-    margin: 0 10px;
-    text-align: center;
+#management_bar {
+    position: relative;
+    padding: 1px 10px 4px;
+}
+#management_bar a {
+    text-decoration: none;
+    color: #bcbcbc;
+}
+#management_bar a:hover {
+    color: #efefef;
+}
+#management_bar img {
+    width: 1.2em;
+    height: 1.2em;
+    margin-top: 2px;
+    vertical-align: text-bottom;
+}
+#headerLogOut {
+    margin-left: 0.5em;
 }
 
-#BacktoTop {
-    clear: both;
-    margin: 10px;
-    font-size: 80%;
-    text-align: right;
+/* Footer Setings */
+#footer {
+  margin-bottom: 0;
+  clear: both;
 }
 
-#Banner {
-    clear: both;
-    width: 100%;
-    padding: 20px 0;
-    margin: 0 auto;
+#footer p {
+  padding: 5px 0;
+  text-align: right;
+  font-size: 80%;
+}
+
+#footer p a:link {
+  color: #333333;
 }
 
 /* for accessibility */
 .Skip {
-    position: absolute;
-    left: -999em;
+  position: absolute;
+  left: -999em;
 }
-
-/******************************************************************************/
 
 /* clearfix http://www.positioniseverything.net/ */
 .clearfix:after {
-    clear: both;
-    height: 0;
-    visibility: hidden;
-    display: block;
-    content: ".";
+  clear: both;
+  height: 0;
+  visibility: hidden;
+  display: block;
+  content: ".";
 }
 
 .clearfix {
-    display: inline-table;
+  display: inline-table;
 }
-
-/* Hides from IE-mac \*/
-* html .clearfix {
-    height: 1%;
-}
-
-.clearfix {
-    display: block;
-}
-
-/* End hide from IE-mac */
 
 /******************************************************************************/
-/* メインメニュー及びユーザメニュー */
+/* Main Menu and User Menu Settings */
 .mainmenu, #usermenu {
     padding: 0;
     margin: 0;
@@ -439,7 +499,8 @@ tr.odd td {
     line-height: 1.5;
 }
 
-.itemText:first-letter {}
+.itemText:first-letter {
+}
 .itemFoot {
     padding: 3px;
     text-align: right;
@@ -562,30 +623,15 @@ div.xoopsQuote {
     font-weight: bold;
 }
 
-#navigation {
-	background: #e9e9e9;
-	padding: 0;
-	margin: 10px 0;
+/* Form Settings */
+#legacy_xoopsform_block_uname {
+	width: 100%;
 }
 
-#navigation a	{
-	color: #0e0e0e;
-	display: block;
-	float: left;
-	padding: 10px;
-	text-decoration: none
+#legacy_xoopsform_block_pass {
+	width: 100%;
 }
 
-#navigation a:visited {
-	color: #0e0e0e;
-}
-
-#navigation a:hover	{
-	text-decoration: none;
-	background: #5a87f2;
-}
-
-#navigation a:active {
-	position: relative;
-	top: 0;
+#xoops_theme_select {
+	width: 100%;
 }

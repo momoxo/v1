@@ -8,7 +8,7 @@ define('_BASIC_LOGIN', 'ログイン：');
 define('_BASIC_LOGIN_BUTTON', ' OK ');
 define('_BASIC_LOGIN_FORM', ' ログイン ');
 define('_BASIC_PWORD', 'パスワード：');
-define('_BASIC_ADMIN_PAGE', '管理ページ');
+define('_BASIC_ADMIN_PAGE', '管理メニュー');
 define('_BASIC_LOGOUT', 'ログアウト');
 define('_BASIC_LOST_PASS', 'パスワード紛失');
 define('_BASIC_RESISTER', '新規登録しませんか？');
