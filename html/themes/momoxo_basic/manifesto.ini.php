@@ -2,17 +2,17 @@
 /**
 
 [Manifesto]
-Name="Momonga Basic"
-Depends=Legacy_RenderSystem,legacy
-Url="http:/momoxo.org/"
-Version="0.1"
+Name="momoxo basic"
+Depends="Legacy_RenderSystem,legacy"
+Url="http://momoxo.org/"
+Version="0.3"
 
 [Theme]
-RenderSystem=Legacy_RenderSystem
+RenderSystem="Legacy_RenderSystem"
 Format="XOOPS2 Legacy Style"
-Author=Momonga Project
+Author="momoxo project"
 ScreenShot="screenshot.png"
-Description="Momonga Basic"
+Description="momoxo basic"
 Licence="GPL"
 
 */
