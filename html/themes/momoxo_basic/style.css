@@ -83,6 +83,11 @@ body.ShowBlockL0R0 #CenterColumn {
   width: 100%;
 }
 
+body.ShowBlockL0R0 #CenterCColumn {
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
 /* 2 Column Layout. Enable Left Column */
 body.ShowBlockL1R0 #Wrapper {
   width: 100%;
@@ -203,7 +208,7 @@ body.ShowBlockL1R1 #CenterWrapper {
 
 @font-face {
   font-family: 'font1';
-  src: url('modin.ttf');
+  src: url('fonts/modin.eot?') format('oldIE'),url('fonts/modin.woff') format('woff'),url('fonts/modin.ttf') format('truetype');
 }
 
 .fontArbasis {
