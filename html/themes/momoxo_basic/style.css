@@ -208,7 +208,9 @@ body.ShowBlockL1R1 #CenterWrapper {
 
 @font-face {
   font-family: 'font1';
-  src: url('fonts/modin.eot?') format('oldIE'),url('fonts/modin.woff') format('woff'),url('fonts/modin.ttf') format('truetype');
+  src: url('fonts/modin.eot?') format('oldIE'),
+  url('fonts/modin.woff') format('woff'),
+  url('fonts/modin.ttf') format('truetype');
 }
 
 .fontArbasis {
