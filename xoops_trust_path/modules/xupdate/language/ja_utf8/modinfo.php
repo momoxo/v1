@@ -65,6 +65,8 @@ define('_MI_XUPDATE_MANAGE', '管理');
 // A brief description of this module
 define('_MI_XUPDATE_DESC'     , 'お好みのアドオンをダウンロードできます');
 define('_MI_XUPDATE_MSG_SAVED', '設定を保存しました。');
+define('_MI_XUPDATE_MSG_DO_MODULE_INSTALL', '引き続き、モジュールインストールを行います。');
+define('_MI_XUPDATE_MSG_DO_MODULE_UPDATE', '引き続き、モジュールアップデートを行います。');
 
 // admin menus
 define('_MI_XUPDATE_ADMENU_ADDONSTORE'   , 'アドオンストア');
@@ -120,13 +122,19 @@ define('_MI_XUPDATE_XEL_DIRNAME'  , 'X-elFinder ディレクトリ名');
 define('_MI_XUPDATE_XEL_DIRNAMEDSC','X-elFinder の一般設定のボリュームドライバに<br />"<b>xelfinder:xelfinder:preload:プリロード:gid=1</b>" (X-update がダイレクトモードで動作する場合)<br />または<br />"<b>xelfinder:ftp:preload:プリロード:gid=1</b>" (X-elFinder の FTP 設定を使用する場合)<br />を追加するとプリロードの管理を行なうことができます。');
 define('_MI_XUPDATE_SHOW_DISABLED_STORE'   , '非表示にされたストアも表示する');
 define('_MI_XUPDATE_SHOW_DISABLED_STOREDSC', 'アドオンストア側で非表示にされたストアーを表示します。(開発者用です)');
+define('_MI_XUPDATE_PARALLEL_FETCH_MAX',     'ストアデータ取得時の同時接続数');
+define('_MI_XUPDATE_PARALLEL_FETCH_MAXDSC',  'ストア一覧のデータを取得する場合の HTTP 同時接続数を設定します。<br />環境によりデータ取得に失敗する場合はこの値を減らして調整します。（デフォルト： 50）');
+define('_MI_XUPDATE_CURL_MULTI_SELECT',      'curl_multi_select を使用しない');
+define('_MI_XUPDATE_CURL_MULTI_SELECTDSC',   '環境により同時接続数を 2 以上にするとデータ取得に失敗する場合があります。その場合に限り「はい」を選択してください。');
+define('_MI_XUPDATE_CURL_SSL_NO_VERIFY',     'cURL: SSLホスト認証をしない');
+define('_MI_XUPDATE_CURL_SSL_NO_VERIFYDSC',  'cURL 利用時に SSL接続時のサーバー認証がエラーになる場合に「はい」を選択してください。');
 
 // progress messages
 define('_MI_XUPDATE_PROG_FILE_GETTING', 'パッケージを取得しています。');
 define('_MI_XUPDATE_PROG_UPLOADING'   , 'ファイルを配置しています。');
 define('_MI_XUPDATE_PROG_CLEANING_UP' , '一時ファイルを削除しています。');
 define('_MI_XUPDATE_PROG_COMPLETED'   , 'ファイルの配置を完了しました。');
-define('_MI_XUPDATE_PROG_PROCESSING'  , '<p>パッケージを取得してサーバー上に配置しています。</p><p>パッケージのサイズや環境により、数分の時間を要することもあります。</p><p>画面が切り替わるまで、そのままお待ちください。</p>');
+define('_MI_XUPDATE_PROG_PROCESSING'  , '<p>パッケージを取得してサーバー上に配置しています。</p><p>パッケージのサイズや環境により、数分の時間を要することもあります。</p><p>画面が切り替わるまで、そのままお待ちください。</p><p>サーバーとの接続がリセットされた場合は、再試行してデータ再送信を繰り返してください。</p>');
 
 // error messages
 define('_MI_XUPDATE_ANOTHER_PROCESS_RUNNING', '他のプロセスがアップデート中です。しばらく待ってから再度実行してください。');

@@ -20,7 +20,10 @@ class Xupdate_Root extends XoopsSimpleObject {
 		{
 			exit;
 		}
-
+		
+		// load compatibility code
+		require_once XUPDATE_TRUST_PATH . '/include/compat.php';
+		
 		$this->xoops_root_path = XOOPS_ROOT_PATH;
 
 		$this->mRoot = $root = XCube_Root::getSingleton();
@@ -45,6 +48,12 @@ class Xupdate_Root extends XoopsSimpleObject {
 		$this->params['temp_path'] = XOOPS_TRUST_PATH . '/'.trim($this->mod_config['temp_path'],'/') ;
 		//adump($this->params['temp_path']);
 
+		// define system cache file
+		if (! defined('_MD_XUPDATE_SYS_LOCK_FILE')) {
+			define('_MD_XUPDATE_SYS_LOCK_FILE', $this->params['temp_path'] . '/xupdate.lock');
+			define('_MD_XUPDATE_SYS_RETRYSER_FILE', $this->params['temp_path'] . '/retry_cache.ser');
+		}
+		
 		$tmpf = rtrim($this->params['temp_path'], '/');
 		$tmpf_realpath = realpath($tmpf);
 		if (empty($tmpf_realpath)){
@@ -55,11 +64,11 @@ class Xupdate_Root extends XoopsSimpleObject {
 		$this->params['is_writable']['result'] = Xupdate_Utils::checkDirWritable($tmpf_realpath);
 
 		// Ftp class
-		require_once dirname(__FILE__) . '/Ftp.class.php';
+		require_once XUPDATE_TRUST_PATH . '/class/Ftp.class.php';
 		$this->Ftp = new Xupdate_Ftp($this) ;
 
 		// Func class
-		require_once dirname(__FILE__).'/Func.class.php' ;
+		require_once XUPDATE_TRUST_PATH . '/class/Func.class.php' ;
 		$this->func = new Xupdate_Func($this) ;
 	}
 

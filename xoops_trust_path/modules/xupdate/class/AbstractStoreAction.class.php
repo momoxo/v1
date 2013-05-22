@@ -85,6 +85,9 @@ class Xupdate_AbstractStoreAction extends Xupdate_AbstractListAction
 	{
 		$navi =& parent::_getPageNavi();
 		$navi->setPerpage(30);//TODO
+		if ($filter = (string)$this->mRoot->mContext->mRequest->getRequest('filter')) {
+			$navi->addExtra('filter', $filter);
+		}
 
 		return $navi;
 	}
@@ -293,10 +296,22 @@ class Xupdate_AbstractStoreAction extends Xupdate_AbstractListAction
 			$olddata['dirname'] = $obj->getVar('dirname');
 			$newdata['dirname'] = $new_dirname;
 			if (count(array_diff_assoc($olddata, $newdata)) > 0 ) {
-				$mModule = $hModule->getByDirname($dirname);
+				$mModule = $hModule->getByDirname($new_dirname);
 				if (is_object($mModule)) {
 					$obj->set('isactive', $mModule->getVar('isactive')? 1 : 0);
 				} else {
+					if (! file_exists(XOOPS_MODULE_PATH . '/' . $new_dirname)) {
+						if ($this->Ftp->app_login()) {
+							// APC のキャッシュ対策のため、rename の場合もタイムスタンプを更新ｓるため mkdir する。
+							$this->Ftp->localMkdir(XOOPS_MODULE_PATH . '/' . $new_dirname);
+							if ($obj->getVar('isactive') === -1) {
+								$this->Ftp->localRename(XOOPS_MODULE_PATH . '/' . $olddata['dirname'], XOOPS_MODULE_PATH . '/' . $new_dirname);
+							}
+						} else {
+							$successFlag = false;
+							break;
+						}
+					}
 					$obj->set('isactive', -1);
 				}
 				$obj->set('dirname', $new_dirname);
@@ -588,12 +603,11 @@ jQuery(function($){
 
 	var checkAll = function()
 	{
-		var isChecked = $(this).attr('checked');
-		if ( isChecked == 'checked' )
+		if ( $(this).is(':checked') )
 		{
-			$('.rapidInstallCheckbox').attr('checked', 'checked');
+			$('.rapidInstallCheckbox').prop("checked", true);
 		}else{
-			$('.rapidInstallCheckbox').attr('checked', false);
+			$('.rapidInstallCheckbox').prop("checked", false);
 		}
 	}
 

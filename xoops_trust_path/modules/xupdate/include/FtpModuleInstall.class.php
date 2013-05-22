@@ -1,47 +1,10 @@
 <?php
 
 // Xupdate_ftp excutr function
-// if(!class_exists('ZipArchive') ){
-// 	$mod_zip=false;
-// 	if (!extension_loaded('zip')) {
-// 		if (function_exists('dl')){
-// 			$prefix = (PHP_SHLIB_SUFFIX == 'dll') ? 'php_' : '';
-// 			if(@dl($prefix . 'zip.' . PHP_SHLIB_SUFFIX)){
-// 				$mod_zip=true;
-// 			}
-// 		}
-// 	}
-// 	if(!class_exists('ZipArchive') ){
-// 		require_once XUPDATE_TRUST_PATH .'/include/FtpCommonFileArchive.class.php';
-// 	}else{
-// 		require_once XUPDATE_TRUST_PATH .'/include/FtpCommonZipArchive.class.php';
-// 	}
-// }else{
-// 	require_once XUPDATE_TRUST_PATH .'/include/FtpCommonZipArchive.class.php';
-// }
+
 require_once XUPDATE_TRUST_PATH .'/include/FtpCommonFileArchive.class.php';
 
 class Xupdate_FtpModuleInstall extends Xupdate_FtpCommonZipArchive {
-
-/*parent public
-	public $mRoot ;
-	public $mModule ;
-	public $mAsset ;
-
-	public $Xupdate  ;	// Xupdate instance
-	public $Ftp  ;	// FTP instance
-	public $Func ;	// Functions instance
-	public $mod_config ;
-	public $content ;
-	public $downloadDirPath;
-	public $exploredDirPath;
-	public $downloadUrlFormat;
-
-	public $nextlink ;
-
-	public $target_key;
-	public $target_type;
-*/
 
 	public $trust_dirname;
 	public $dirname;
@@ -66,24 +29,30 @@ class Xupdate_FtpModuleInstall extends Xupdate_FtpCommonZipArchive {
 		$result = true;
 		$siteCloseConf = null;
 		if( $this->Xupdate->params['is_writable']['result'] === true ) {
-			$is_upload_retry = isset($_POST['upload_retry']);
+			$this->retry_phase = isset($_POST['upload_retry'])? intval($_POST['upload_retry']) : 0;
 			
-			$GLOBALS['xupdate_stage'] = 1;
-			
-			// clean up download dirctory
-			if (! $is_upload_retry) {
-				$this->_cleanUp_downloadDir();
+			$downloadDirPath = realpath($this->Xupdate->params['temp_path']);
+			// check excutable & retry_phase
+			if (! $this->is_xupdate_excutable()) {
+				if ($this->retry_phase === 0 || ! file_exists($downloadDirPath.'/'.$this->target_key)) {
+					$this->content.= '<div class="error">' . _MI_XUPDATE_ANOTHER_PROCESS_RUNNING . '</div>';
+					return false;
+				}
 			}
 			
-			if(! $this->checkExploredDirPath($this->target_key)) {
+			// clean up download dirctory
+			if (! $this->retry_phase) {
+				$this->_cleanUp_downloadDir();
+			} else {
+				$this->Ftp->appendMes('Retry phase: '.$this->retry_phase.'<br />');
+			}
+			
+			$this->_set_stage(1);
+			
+			if(! $exploredDirPath = $this->checkExploredDirPath($this->target_key)) {
 				$this->_set_error_log(_MI_XUPDATE_ERR_MAKE_EXPLOREDDIR . ': ' .$this->target_key);
 				return false;
 			}
-			if (! $this->is_xupdate_excutable()) {
-				$this->content.= '<div class="error">' . _MI_XUPDATE_ANOTHER_PROCESS_RUNNING . '</div>';
-				return false;
-			}
-			
 			
 			$downloadUrl = $this->Func->_getDownloadUrl( $this->target_key, $this->downloadUrlFormat );
 			
@@ -94,17 +63,23 @@ class Xupdate_FtpModuleInstall extends Xupdate_FtpCommonZipArchive {
 			}
 			
 			register_shutdown_function('xupdate_on_shutdown', $this->Xupdate->params['temp_path'], $downloadUrl);
+			// set stat time
+			Xupdate_Utils::check_http_timeout();
 			
 			$this->content.= _MI_XUPDATE_PROG_FILE_GETTING . '<br />';
-			if ($is_upload_retry || $this->Func->_downloadFile( $this->target_key, $downloadUrl, $this->download_file, $this->downloadedFilePath )){
-				$GLOBALS['xupdate_stage'] = 2;
-				$downloadDirPath = realpath($this->Xupdate->params['temp_path']);
-				$exploredRoot = $this->exploredDirPath = realpath($downloadDirPath.'/'.$this->target_key);
-				if ($is_upload_retry) {
+			if ($this->retry_phase || $this->Func->_downloadFile( $this->target_key, $downloadUrl, $this->download_file, $this->downloadedFilePath )){
+				$this->_set_stage(2);
+				$this->exploredDirPath = $exploredDirPath;
+				
+				if ($this->retry_phase) {
 					$this->downloadedFilePath = $this->Func->_getDownloadFilePath( $downloadDirPath, $this->download_file );
 				}
-				if($this->_unzipFile($caller)) {
-					$GLOBALS['xupdate_stage'] = 3;
+				if($this->retry_phase > 2 || $this->_unzipFile()) {
+					$this->_set_stage(3);
+					
+					// delete downloaded archive
+					@ unlink( $this->downloadedFilePath );
+					
 					if ($caller === 'preload') {
 						$set_member = 'exploredPreloadPath';
 						$serach_file = $this->target_key . '.class.php';
@@ -115,7 +90,7 @@ class Xupdate_FtpModuleInstall extends Xupdate_FtpCommonZipArchive {
 					if ($this->exploredPreloadPath || $this->_exploredDirPath_DownDir($set_member, $serach_file)) {
 						// TODO port , timeout
 						if ($this->Ftp->isConnected() || $this->Ftp->app_login()==true) {
-							$GLOBALS['xupdate_stage'] = 4;
+							$this->_set_stage(4);
 							// overwrite control
 							if(! isset($this->options['no_overwrite'])){
 								$this->options['no_overwrite'] = array();
@@ -148,16 +123,20 @@ class Xupdate_FtpModuleInstall extends Xupdate_FtpCommonZipArchive {
 								}
 							}
 
-							$GLOBALS['xupdate_stage'] = 5;
-							if (!$this->uploadFiles()){
-								$this->_set_error_log(_MI_XUPDATE_ERR_FTP_UPLOADFILES);
-								$result = false;
+							$this->_set_stage(5);
+							if ($this->retry_phase < 6) {
+								if ($this->uploadFiles()){
+									@ unlink(_MD_XUPDATE_SYS_RETRYSER_FILE);
+								} else {
+									$this->_set_error_log(_MI_XUPDATE_ERR_FTP_UPLOADFILES);
+									$result = false;
+								}
 							}
-							$GLOBALS['xupdate_stage'] = 6;
+							$this->_set_stage(6);
 							
-							$this->_set_item_perm();
+							$this->retry_phase > 6 || $this->_set_item_perm();
 							
-							$GLOBALS['xupdate_stage'] = 7;
+							$this->_set_stage(7);
 						} else {
 							$this->_set_error_log(_MI_XUPDATE_ERR_FTP_LOGIN);
 							$result = false;
@@ -177,19 +156,18 @@ class Xupdate_FtpModuleInstall extends Xupdate_FtpCommonZipArchive {
 			}
 
 			$this->content.= _MI_XUPDATE_PROG_CLEANING_UP . '<br />';
-			$this->_cleanup($exploredRoot);
+			$this->_cleanup($exploredDirPath);
 
 			if ($this->Ftp->isConnected()) {
 				$this->Ftp->app_logout();
 			}
 			//
 
-//TODO unlink ok?
-			@unlink( $this->downloadedFilePath );
+			@ unlink( $this->downloadedFilePath );
 
-			$this->content.= _MI_XUPDATE_PROG_COMPLETED . '<br /><br />';
+			if ($result) $this->content.= _MI_XUPDATE_PROG_COMPLETED . '<br /><br />';
 			
-			@ unlink($this->lockfile);
+			@ unlink(_MD_XUPDATE_SYS_LOCK_FILE);
 		}else{
 			$result = false;
 		}
@@ -283,6 +261,22 @@ class Xupdate_FtpModuleInstall extends Xupdate_FtpCommonZipArchive {
 				}
 			}
 			
+			// check extra languages
+			if (! $this->html_only) {
+				$this->_copy_extra_langs($this->dirname, $this->trust_dirname, 'trust');
+			}
+			$this->_copy_extra_langs($this->dirname, $this->trust_dirname, 'html');
+			
+			if ($this->trust_dirname === 'protector') {
+				// for protector 'manip_value' update
+				if (! XC_CLASS_EXISTS('Protector')) {
+					// check and enable protector in mainfile.php
+					if (file_exists(XOOPS_TRUST_PATH . '/modules/protector/include/precheck.inc.php')) {
+						$this->Func->write_mainfile_protector(true);
+					}
+				}
+			}
+			
 		} else if ($this->exploredPreloadPath) {
 			
 			// copy html/preload
@@ -313,35 +307,22 @@ class Xupdate_FtpModuleInstall extends Xupdate_FtpCommonZipArchive {
 				return false;
 			}
 			
-			// for legacy core extra languages
+			// check extra languages
+			$this->_copy_extra_langs($this->dirname);
+			
+			// for legacy only
 			if ($this->dirname === 'legacy') {
-				// copy extras languages
-				$langs = array();
-				if ($handle = opendir(XOOPS_ROOT_PATH . '/language')) {
-					while (false !== ($name = readdir($handle))) {
-						if ($name[0] !== '.' && is_dir(XOOPS_ROOT_PATH . '/language/' . $name)) {
-							$langs[] = $name;
-						}
-					}
-					closedir($handle);
-				}
-				//adump($langs);
-				foreach ($langs as $lang) {
-					$uploadPath = XOOPS_ROOT_PATH . '/' ;
-					$unzipPath =  $this->exploredDirPath . '/extras/extra_languages/' . $lang;
-					if (file_exists($unzipPath)) {
-						$result = $this->Ftp->uploadNakami($unzipPath, $uploadPath);
-						if (! $this->_check_file_upload_result($result, 'html')){
-							return false;
-						}
-					}
-				}
 				// for protector 'manip_value' update
 				if (XC_CLASS_EXISTS('Protector')) {
 					$db =& Database::getInstance();
 					$protector =& Protector::getInstance();
 					$protector->setConn($db->conn);
 					$protector->updateConfIntoDb('manip_value' , '');
+				} else {
+					// check and enable protector in mainfile.php
+					if (file_exists(XOOPS_TRUST_PATH . '/modules/protector/include/precheck.inc.php')) {
+						$this->Func->write_mainfile_protector(true);
+					}
 				}
 			}
 		}
@@ -350,6 +331,68 @@ class Xupdate_FtpModuleInstall extends Xupdate_FtpCommonZipArchive {
 		return true;
 	}
 
+	/**
+	 * _copy_extra_langs: copy extras languages
+	 * 
+	 * @param string $dirname
+	 * @param string $trust_dirname
+	 * @param string $side
+	 */
+	private function _copy_extra_langs($dirname, $trust_dirname = '', $side = 'html')
+	{
+		static $langs = null;
+		
+		if (is_null($langs)) {
+			$langs = array();
+			if ($handle = opendir(XOOPS_ROOT_PATH . '/language')) {
+				while (false !== ($name = readdir($handle))) {
+					if ($name[0] !== '.' && is_dir(XOOPS_ROOT_PATH . '/language/' . $name)) {
+						$langs[] = $name;
+					}
+				}
+				closedir($handle);
+			}
+		}
+		
+		$uploadDir = $checkDir = array();
+		$isLegacy = ($dirname === 'legacy');
+		if ($isLegacy) {
+			$checkDir[] = $this->exploredDirPath . '/extras/extra_languages/<LANG>/html';
+			$uploadDir[] = XOOPS_ROOT_PATH . '/';
+			
+			$checkDir[] = $this->exploredDirPath . '/extras/extra_languages/<LANG>';
+			$uploadDir[] = XOOPS_ROOT_PATH . '/';
+		} else {
+			if ($side === 'trust') {
+				$side = 'xoops_trust_path';
+				$base = XOOPS_TRUST_PATH ;
+				$arc_dirname = $trust_dirname;
+			} else {
+				$side = 'html';
+				$base = XOOPS_ROOT_PATH ;
+				$arc_dirname = $trust_dirname? $trust_dirname : $dirname;
+			}
+			$checkDir[] = $this->exploredDirPath . '/extras/'.$side.'/modules/'.$arc_dirname.'/language/<LANG>';
+			$uploadDir[] = $base . '/modules/'.$dirname.'/language/<LANG>/';
+		}
+		foreach ($langs as $lang) {
+			$unzipPath = '';
+			foreach($checkDir as $i => $dir) {
+				$dir = str_replace('<LANG>', $lang, $dir);
+				if (is_dir($dir) && (! $isLegacy || is_dir($dir . '/language'))) {
+					$unzipPath = $dir;
+					$uploadPath = str_replace('<LANG>', $lang, $uploadDir[$i]);
+					break;
+				}
+			}
+			if ($unzipPath) {
+				$result = $this->Ftp->uploadNakami($unzipPath, $uploadPath);
+				$this->_check_file_upload_result($result, $side);
+			}
+		}
+	}
+	
+	
 	/**
 	 * _get_nextlink
 	 *
@@ -412,6 +455,7 @@ class Xupdate_FtpModuleInstall extends Xupdate_FtpCommonZipArchive {
 			}
 		}
 		if (isset($checker['html']) || isset($checker['xoops_trust_path'])) {
+			$this->Ftp->exploredDirPath = $this->exploredDirPath;
 			$this->Ftp->appendMes('found files exploredDirPath: '.$this->exploredDirPath.'<br />');
 			return true;
 		}
@@ -481,6 +525,9 @@ class Xupdate_FtpModuleInstall extends Xupdate_FtpCommonZipArchive {
 	}
 	
 	public function _cleanUp_downloadDir() {
+		if ($this->Ftp->isSafeMode) {
+			$this->Ftp->isConnected() || $this->Ftp->app_login();
+		}
 		$path = realpath($this->Xupdate->params['temp_path']);
 		if ($handle = opendir($path)) {
 			while (false !== ($entry = readdir($handle))) {
@@ -510,6 +557,13 @@ class Xupdate_FtpModuleInstall extends Xupdate_FtpCommonZipArchive {
 			array_map(array($this, '_delete'),$this->options['delete_file']);
 		}
 	}
+	
+	
+	private function _set_stage($stage) {
+		$GLOBALS['xupdate_stage'] = $stage;
+		$this->save_lockfile($stage);
+		Xupdate_Utils::check_http_timeout();
+	}
 } // end class
 
 /**
@@ -519,12 +573,10 @@ class Xupdate_FtpModuleInstall extends Xupdate_FtpCommonZipArchive {
  * @param string $download_url
  */
 function xupdate_on_shutdown($cache_dir, $download_url) {
-	$lock_file = realpath($cache_dir) . '/xupdate.lock';
-	$retry_cache_file = realpath($cache_dir) . '/retry_cache.ser';
-	@ unlink($retry_cache_file);
-	if (connection_status() > 1 || is_file($lock_file)) {
-		@ unlink($lock_file);
-		file_put_contents($retry_cache_file, serialize($GLOBALS['xupdate_retry_cache']));
+	@ unlink(_MD_XUPDATE_SYS_RETRYSER_FILE);
+	if (connection_status() > 1 || is_file(_MD_XUPDATE_SYS_LOCK_FILE)) {
+		@ unlink(_MD_XUPDATE_SYS_LOCK_FILE);
+		file_put_contents(_MD_XUPDATE_SYS_RETRYSER_FILE, serialize($GLOBALS['xupdate_retry_cache']));
 		$buf = '';
 		while (ob_get_level()) {
 			$buf .= ob_get_contents();
@@ -533,7 +585,7 @@ function xupdate_on_shutdown($cache_dir, $download_url) {
 			}
 		}
 		$msg = array();
-		$is_upload_retry = isset($_POST['upload_retry']);
+		$upload_retry = isset($_POST['upload_retry'])? intval($_POST['upload_retry']) : 0;
 		$uploaded_count = count($GLOBALS['xupdate_retry_cache']['uploaded_files']);
 		$uploaded_count_before = isset($_POST['uploaded_count'])? $_POST['uploaded_count'] : 0;
 		$total_files = 0;
@@ -544,7 +596,7 @@ function xupdate_on_shutdown($cache_dir, $download_url) {
 		}
 		$msg[] = '<html><head><title>'._AD_XUPDATE_LANG_TIMEOUT_ERROR.'</title></head><body>';
 		$msg[] = '<h1>'._AD_XUPDATE_LANG_TIMEOUT_ERROR.'</h1>';
-		$start = $is_upload_retry? 3 : 1;
+		$start = $upload_retry? $upload_retry : 1;
 		for ($i = $start; $i <= $GLOBALS['xupdate_stage']; $i++) {
 			$done_files = '';
 			if ($i === 5) {
@@ -553,9 +605,9 @@ function xupdate_on_shutdown($cache_dir, $download_url) {
 			$msg[] = constant('_AD_XUPDATE_LANG_STAGE_'.$i) . $done_files;
 		}
 		$msg[] = _AD_XUPDATE_LANG_STAGE_TIMEOUT;
-		if ($GLOBALS['xupdate_stage'] < 5) {
+		if ($GLOBALS['xupdate_stage'] < 2) {
 			$msg[] = sprintf(_AD_XUPDATE_LANG_STAGE_UPLOAD_NOT_COMPLETE, $download_url);
-		} else if ($GLOBALS['xupdate_stage'] > 4) {
+		} else {
 			$post = $_POST;
 			unset($_POST['uploaded_count'], $_POST['upload_retry']);
 			if (isset($_SESSION['XCUBE_TOKEN'])) {
@@ -566,10 +618,10 @@ function xupdate_on_shutdown($cache_dir, $download_url) {
 						$post[$key] = $val;
 					}
 				}
-				$post['upload_retry'] = 1;
+				$post['upload_retry'] = $GLOBALS['xupdate_stage'];
 				$post['uploaded_count'] = $uploaded_count;
 			}
-			if ($is_upload_retry && $uploaded_count_before > $uploaded_count) {
+			if ($upload_retry > 4 && $uploaded_count_before > $uploaded_count) {
 				$msg[] = sprintf(_AD_XUPDATE_LANG_STAGE_UPLOAD_NOT_COMPLETE, $download_url);
 			} else {
 				if ($GLOBALS['xupdate_do_closesite']) {

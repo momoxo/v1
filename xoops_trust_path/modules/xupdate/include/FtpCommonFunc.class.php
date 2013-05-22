@@ -27,8 +27,8 @@ class Xupdate_FtpCommonFunc {
 	public $options = array();
 
 	protected $download_file;
-	protected $lockfile;
 	protected $exploredPreloadPath;
+	protected $retry_phase;
 	
 	public function __construct() {
 
@@ -39,12 +39,10 @@ class Xupdate_FtpCommonFunc {
 		$this->Xupdate = new Xupdate_Root ;// Xupdate instance
 		$this->Ftp =& $this->Xupdate->Ftp ;		// FTP instance
 		$this->Func =& $this->Xupdate->func ;		// Functions instance
+		$this->content =& $this->Func->content;
 		$this->mod_config = $this->mRoot->mContext->mModuleConfig ;	// mod_config
 
 		$this->downloadDirPath = $this->Xupdate->params['temp_path'];
-//		$this->downloadUrlFormat = $this->mod_config['Mod_download_Url_format'];
-		
-		$this->lockfile = XOOPS_TRUST_PATH.'/'.trim($this->mod_config['temp_path'], '/').'/xupdate.lock';
 		
 	}
 
@@ -65,25 +63,20 @@ class Xupdate_FtpCommonFunc {
 	 **/
 	public function _cleanup($dir)
 	{
-		if ($handle = opendir("$dir")) {
-			$safemode = (ini_get('safe_mode') == "1");
+		if ($handle = opendir($dir)) {
+			$this->Ftp->appendMes('removing directory: '.$dir.'<br />');
 			while (false !== ($item = readdir($handle))) {
 				if ($item != "." && $item != "..") {
 					if (is_dir("$dir/$item")) {
 						$this->_cleanup("$dir/$item");
-						$this->Ftp->appendMes('removing directory: '.$dir.'/'.$item.'<br />');
 					} else {
 						unlink("$dir/$item");
+						Xupdate_Utils::check_http_timeout();
 					}
 				}
 			}
 			closedir($handle);
-			if ($safemode) {
-				$this->Ftp->localRmdir($dir);
-			} else {
-				rmdir($dir);
-			}
-			
+			@rmdir($dir) || (($this->Ftp->isConnected() || $this->Ftp->app_login()) && $this->Ftp->localRmdir($dir));
 		}
 	}
 
@@ -96,23 +89,25 @@ class Xupdate_FtpCommonFunc {
 	 **/
 	public function _set_error_log($msg)
 	{
-		$this->Ftp->appendMes('<span style="color:red;">'.$msg.'</span><br />');
-		$this->content.= '<span style="color:red;">'.$msg.'</span><br />';
+		if ($msg) {
+			$this->Ftp->appendMes('<span style="color:red;">'.$msg.'</span><br />');
+			$this->content.= '<span style="color:red;">'.$msg.'</span><br />';
+		}
 	}
 	
 	/**
 	 * Check exists & writable ExploredDirPath
 	 * @param  string  $target_key
-	 * @return boolean
+	 * @return string | boolean
 	 */
 	public function checkExploredDirPath($target_key) {
 		if ($this->Ftp->app_login()) {
 			
 			$downloadDirPath = realpath($this->Xupdate->params['temp_path']);
 			$exploredDirPath = $downloadDirPath.'/'.$target_key;
-			$ret = ((file_exists($exploredDirPath) || $this->Ftp->localMkdir($exploredDirPath)) && (is_writable($exploredDirPath) || $this->Ftp->localChmod($exploredDirPath, 0707)));
-			
-			return $ret;
+			if ((file_exists($exploredDirPath) || $this->Ftp->localMkdir($exploredDirPath)) && (is_writable($exploredDirPath) || $this->Ftp->localChmod($exploredDirPath, 0707))) {
+				return $exploredDirPath;
+			}
 		}
 		return false;
 	}
@@ -123,14 +118,24 @@ class Xupdate_FtpCommonFunc {
 	 * @return boolean
 	 */
 	protected function is_xupdate_excutable() {
-		if (file_exists($this->lockfile) && filemtime($this->lockfile) + 600 > time()) {
+		if (file_exists(_MD_XUPDATE_SYS_LOCK_FILE) && filemtime(_MD_XUPDATE_SYS_LOCK_FILE) + 600 > time()) {
+			$this->retry_phase = intval(file_get_contents(_MD_XUPDATE_SYS_LOCK_FILE));
 			return false;
 		}
 		ignore_user_abort(true); // Ignore user aborts and allow the script
-		touch($this->lockfile);  // make lock file
+		touch(_MD_XUPDATE_SYS_LOCK_FILE);  // make lock file
 		return true;
 	}
 
+	/**
+	 * save_lockfile
+	 * 
+	 * @param int $stage
+	 */
+	protected function save_lockfile($stage) {
+		file_put_contents(_MD_XUPDATE_SYS_LOCK_FILE, $stage);
+	}
+	
 	/**
 	 * _check_file_upload_result
 	 *

@@ -65,6 +65,8 @@ define('_MI_XUPDATE_MANAGE', 'Manage');
 // A brief description of this module
 define('_MI_XUPDATE_DESC', 'You can download the add-on of your choice');
 define('_MI_XUPDATE_MSG_SAVED' , 'Your settings have been saved');
+define('_MI_XUPDATE_MSG_DO_MODULE_INSTALL', 'Then, module install is performed.');
+define('_MI_XUPDATE_MSG_DO_MODULE_UPDATE', 'Then, module update is performed.');
 
 // admin menus
 define('_MI_XUPDATE_ADMENU_ADDONSTORE'   , 'Add-on Store');
@@ -120,6 +122,12 @@ define('_MI_XUPDATE_XEL_DIRNAME'  , 'X-elFinder Module');
 define('_MI_XUPDATE_XEL_DIRNAMEDSC','You can manege preload with X-elFinder. If add setting in X-elFinder config "Volume Driver"<br />"<b>xelfinder:xelfinder:preload:Preload:gid=1</b>" (X-update work on Direct mode)<br />Or<br />"<b>xelfinder:ftp:preload:Preload:gid=1</b>" (Use X-elFinder FTP settings)');
 define('_MI_XUPDATE_SHOW_DISABLED_STORE'   , 'Show disabled stores');
 define('_MI_XUPDATE_SHOW_DISABLED_STOREDSC', 'Show the store that was disabled at the Add-on store. (This is for developers)');
+define('_MI_XUPDATE_PARALLEL_FETCH_MAX',     'HTTP connection Max');
+define('_MI_XUPDATE_PARALLEL_FETCH_MAXDSC',  'The number of HTTP simultaneous connection in the case of fetching the data of a store list.<br />When data acquisition cannot be carried out according to environment, it is necessary to reduce and adjust this value. (Default: 50)');
+define('_MI_XUPDATE_CURL_MULTI_SELECT',      'curl_multi_select not use');
+define('_MI_XUPDATE_CURL_MULTI_SELECTDSC',   'Choose "yes" only when the number of simultaneous connection is two or more and data acquisition goes wrong.');
+define('_MI_XUPDATE_CURL_SSL_NO_VERIFY',     'cURL: Disable SSL verify');
+define('_MI_XUPDATE_CURL_SSL_NO_VERIFYDSC',  'Please choose "yes", when the server authentication at the time of SSL connection becomes an error by cURL.');
 
 // progress messages
 define('_MI_XUPDATE_PROG_FILE_GETTING', 'Downloading the package.');

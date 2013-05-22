@@ -67,20 +67,24 @@ class Xupdate_Ftp extends Xupdate_Ftp_ {
 	private $loginCheckFile;
 	private $phpPerm;
 	private $uploaded_files = array();
+	public $isSafeMode;
 	
 	/* Constructor */
 	public function __construct($XupdateObj, $port_mode=FALSE, $verb=FALSE, $le=FALSE) {
 		parent::__construct($XupdateObj);
 		
-		$this->loginCheckFile = XOOPS_TRUST_PATH.'/'.trim($this->mod_config['temp_path'], '/').'/'.rawurlencode(substr(XOOPS_URL, 7)).'_logincheck.ini.php';
+		$tempDir = XOOPS_TRUST_PATH.'/'.trim($this->mod_config['temp_path'], '/');
+		
+		$this->isSafeMode = (ini_get('safe_mode') == "1" || ! Xupdate_Utils::checkMakeDirectory($tempDir));
+		
+		$this->loginCheckFile = $tempDir.'/'.rawurlencode(substr(XOOPS_URL, 7)).'_logincheck.ini.php';
 		if (! empty($this->mod_config['php_perm'])) {
 			$this->phpPerm = intval($this->mod_config['php_perm'], 8);
 		}
 		
 		// for upload retry mode
-		$retry_cache_file = XOOPS_TRUST_PATH.'/'.trim($this->mod_config['temp_path'], '/').'/retry_cache.ser';
-		if (isset($_POST['upload_retry']) && is_file($retry_cache_file)) {
-			if ($retry_cache = @unserialize(file_get_contents($retry_cache_file))) {
+		if (isset($_POST['upload_retry']) && is_file(_MD_XUPDATE_SYS_RETRYSER_FILE)) {
+			if ($retry_cache = @unserialize(file_get_contents(_MD_XUPDATE_SYS_RETRYSER_FILE))) {
 				$this->uploaded_files = $retry_cache['uploaded_files'];
 				$GLOBALS['xupdate_retry_cache'] = $retry_cache;
 			}
@@ -118,7 +122,7 @@ class Xupdate_Ftp extends Xupdate_Ftp_ {
 
 	public function uploadNakami($sourcePath, $targetPath)
 	{
-		$this->mes .= " start FTP put (normal mode) ".htmlspecialchars($targetPath ,ENT_QUOTES ,_CHARSET)." ..<br>\n";
+		$this->mes .= " start FTP put (normal mode) form `".htmlspecialchars(substr($sourcePath, strlen($this->exploredDirPath) + 1) ,ENT_QUOTES ,_CHARSET)."` to `".htmlspecialchars($targetPath ,ENT_QUOTES ,_CHARSET)."` ..<br>\n";
 		$result = $this->_ftpPutNakami($sourcePath, $targetPath);
 		return $result;
 	}
@@ -174,6 +178,17 @@ class Xupdate_Ftp extends Xupdate_Ftp_ {
 	 */
 	public function localRmdir($dir) {
 		return parent::rmdir($this->getLocalPath($dir));
+	}
+	
+	/**
+	 * Rename by server path
+	 *
+	 * @param string $from server path
+	 * @param string $to server path
+	 * @return boolean
+	 */
+	public function localRename($from, $to) {
+		return $this->rename($this->getLocalPath($from), $this->getLocalPath($to));
 	}
 	
 	/**
@@ -269,7 +284,7 @@ class Xupdate_Ftp extends Xupdate_Ftp_ {
 		}
 		
 		$xoops_root_path = $this->XupdateObj->xoops_root_path;
-		static $ftp_root ;
+		static $ftp_root = null;
 
 		if (!is_null($ftp_root)){
 			return $ftp_root ;
@@ -277,53 +292,31 @@ class Xupdate_Ftp extends Xupdate_Ftp_ {
 
 		$xoops_root_path = str_replace( "\\","/",$xoops_root_path );
 		$path = explode('/', $xoops_root_path);
-		//$path = preg_split( '///', $xoops_root_path, PREG_SPLIT_NO_EMPTY );
 
 		$current_path = '';
 		for ($i=count($path)-1; $i>=0 ;$i--){
 			$current_path = '/'.$path[$i].$current_path;
 			if ( $this->chdir($current_path) ){
-				$ftp_root = substr($xoops_root_path, 0, strrpos($xoops_root_path, $current_path));
-				return $ftp_root;
+				$_ftp_root = substr($xoops_root_path, 0, strrpos($xoops_root_path, $current_path));
+				$_start = strlen($_ftp_root);
+				if ($this->chdir(substr(XOOPS_TRUST_PATH, $_start))/* check trust path */) {
+					$this->chdir($current_path);
+					$ftp_root = $_ftp_root;
+					return $ftp_root;
+				}
 			}
 		}
-		if ($this->chdir('/')) {
+		if ($this->chdir('/') && strpos(XOOPS_TRUST_PATH, XOOPS_ROOT_PATH) === 0) {
 			// May be XOOPS_ROOT_PATH is FTP root
 			$ftp_root = $xoops_root_path;
 			return $ftp_root;
 		}
 
 		//throw new Exception(t("seekFTP fail"), 1);
-		$this->mes .= " seekFTP fail<br>\n";//TODO WHY fail?
+		$this->mes .= " seekFTPRoot fail. Can not access to XOOPS_ROOT_PATH or XOOPS_TRUST_PATH. Do checking your FTP setting.<br>\n";//TODO WHY fail?
 		return false;
 	}
 
-	protected function _makeTmpDir()
-	{
-		// 最初の1回だけ作成
-
-		chdir( $this->XupdateObj->params['temp_path'] );
-		if(mkdir( $this->XupdateObj->params['temp_dirname'] ) === false){
-			exit();
-			throw new Exception(t("make temporary directory fail"), 1);
-		}
-	}
-/*
-	protected function _doUnzip($file)
-	{
-		chdir($this->params['temp_path']);
-
-		$zip = new ZipArchive;
-		if ($zip->open($file) === TRUE) {
-			$zip->extractTo('./');
-			$zip->close();
-		} else {
-			throw new Exception("unzip fail", 1);
-		}
-
-		return true;
-	}
-*/
 	// remove directories recursively
 	protected function removeDirectory($dir) {
 		if ($handle = opendir("$dir")) {
@@ -401,7 +394,9 @@ class Xupdate_Ftp extends Xupdate_Ftp_ {
 		/// put files
 		$res = array('ok' => $dir_cnt, 'ng' => array());
 		$uploaded_files =& $GLOBALS['xupdate_retry_cache']['uploaded_files'];
+		$_cnt = 0;
 		foreach ($file_list['file'] as $l_file){
+			Xupdate_Utils::check_http_timeout();
 			// check done file on upload retry mode
 			if (isset($this->uploaded_files[$l_file])) {
 				$uploaded_files[$l_file] = $this->uploaded_files[$l_file];
@@ -434,6 +429,9 @@ class Xupdate_Ftp extends Xupdate_Ftp_ {
 				$res['ok']++;
 				$this->setPhpPerm($ftp_remote_file);
 				$uploaded_files[$l_file] = true; // for update retry mode
+			}
+			if (++$_cnt % 100 === 0) {
+				file_put_contents(_MD_XUPDATE_SYS_RETRYSER_FILE, serialize($GLOBALS['xupdate_retry_cache']));
 			}
 		}
 		return $res;
