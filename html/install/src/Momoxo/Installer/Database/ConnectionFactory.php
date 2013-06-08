@@ -62,6 +62,7 @@ class ConnectionFactory
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_AUTOCOMMIT         => true,
             PDO::ATTR_EMULATE_PREPARES   => false,
+            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET CHARACTER SET `utf8`',
         );
     }
 }
